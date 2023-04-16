@@ -5,6 +5,9 @@ import { createApp } from './main';
 export async function render(url: string, manifest) {
   const { app, router } = createApp();
 
+  // console.log('manifest', manifest);
+  // console.log('router', router.getRoutes());
+
   // set the router to the desired URL before rendering
   await router.push(url);
   await router.isReady();
@@ -13,6 +16,8 @@ export async function render(url: string, manifest) {
   // @vitejs/plugin-vue injects code into a component's setup() that registers
   // itself on ctx.modules. After the render, ctx.modules would contain all the
   // components that have been instantiated during this render call.
+  // console.log('app', app);
+
   const ctx = {};
   const html = await renderToString(app, ctx);
 

@@ -11,7 +11,6 @@ export async function createServer(
   isProd = process.env.NODE_ENV === 'production',
   hmrPort: number,
 ) {
-  console.log('sas',  import('compression'));
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const resolve = (p: string) => path.resolve(__dirname, p);
   const indexProd = isProd
@@ -30,7 +29,6 @@ export async function createServer(
 
   if (!isProd) {
     vite = await (await import('vite')).createServer({
-      base: '/test/',
       root,
       logLevel: isTest ? 'error' : 'info',
       server: {
@@ -51,11 +49,8 @@ export async function createServer(
     // use vite's connect instance as middleware
     app.use(vite.middlewares);
   } else {
+    app.use((await import('compression')).default);
     app.use(
-      (await import('compression')).default
-    );
-    app.use(
-      '/test/',
       (await import('serve-static')).default(
         resolve('dist/client'), 
         { index: false },
@@ -65,7 +60,7 @@ export async function createServer(
 
   app.use('*', async (req, res) => {
     try {
-      const url = req.originalUrl.replace('/test/', '/');
+      const url = req.originalUrl; //.replace('/test/', '/');
       let template: string;
       let render: any;
 
@@ -73,7 +68,7 @@ export async function createServer(
         // always read fresh template in dev
         template = fs.readFileSync(resolve('../index.html'), 'utf-8');
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule('/src/app/entry-server.js')).render;
+        render = (await vite.ssrLoadModule('/src/app/entry-server.ts')).render;
       } else {
         template = indexProd;
         // @ts-ignore
@@ -82,6 +77,8 @@ export async function createServer(
 
       const [appHtml, preloadLinks] = await render(url, manifest);
 
+      // console.log('apphtml', appHtml);
+      // console.log('template', template);
       const html = template
         .replace(`<!--preload-links-->`, preloadLinks)
         .replace(`<!--app-html-->`, appHtml);

@@ -14,12 +14,12 @@ import { RouterLink, RouterView } from 'vue-router'
       </nav>
     </div>
   </header>
-
+sssss
   <RouterView />
 </template>
 
 <style lang="postcss" module>
-@import './styles';
+@import '../styles';
 
 .wrapper {
   background: var(--color-primary);

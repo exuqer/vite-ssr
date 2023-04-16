@@ -1,14 +1,23 @@
 {
-  "files": [],
   "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
     {
       "path": "./tsconfig.app.json"
     },
     {
       "path": "./tsconfig.vitest.json"
     }
-  ]
+  ],
+  "include": [
+    "src/server/index.ts",
+    "src/prerender/index.ts",
+  ],
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
 }

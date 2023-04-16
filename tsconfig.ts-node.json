@@ -1,0 +1,9 @@
+{
+  "include": ["src/server/index.ts"],
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "composite": true
+  },
+}
